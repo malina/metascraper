@@ -2,10 +2,8 @@ module Metascraper
   module Parsers
     class Images
       getter document, config
-      @config = Metascraper.config
 
-      def initialize(document : XML::Node)
-        @document = document
+      def initialize(@document : XML::Node, @config : Config)
       end
 
       def images

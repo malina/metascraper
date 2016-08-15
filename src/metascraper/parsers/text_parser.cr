@@ -2,12 +2,11 @@ module Metascraper
   module Parsers
     class Text
       getter document
-      def initialize(document : XML::Node)
-        @document = document
+      def initialize(@document : XML::Node)
       end
 
       def title
-        doc_title || og_title
+        document_title || og_title
       rescue
         nil
       end
@@ -28,7 +27,7 @@ module Metascraper
         first_long_paragraph ? first_long_paragraph.text : ""
       end
 
-      private def doc_title
+      private def document_title
         title = document.xpath_node("//title")
         title.inner_text
       end
