@@ -1,24 +1,23 @@
 module Metascraper
   module Parsers
     class Images
-      getter document, base_url
-      @base_url = ""
+      getter document, config
+      @config = Metascraper.config
 
-      def initialize(document : XML::Node, url : String)
+      def initialize(document : XML::Node)
         @document = document
-        @base_url = base_url(url)
       end
 
       def images
         images = parsed_images.dup
         images.unshift(og_images) if og_images
-        images
+        images.uniq
       end
 
       def og_images
         title = document.xpath_node("//meta[@property='og:image']")
         if title
-          absolutify(title.attributes["content"].text)
+          absolutify(title.attributes["content"].text as String)
         else
           nil
         end
@@ -27,21 +26,20 @@ module Metascraper
       end
 
       private def parsed_images
-        document.xpath_nodes("//img/@src").map do |img|
-          absolutify(img.text)
+        config = Metascraper.config
+        document.xpath_nodes("//img[@width >= #{config.min_width} or substring-before(@width, 'px') > #{config.min_width}]/@src").map do |img|
+          source = img.text as String
+          absolutify(source)
         end
       end
 
-      private def base_url(url) : String
-        uri = URI.parse(url)
-        "#{uri.scheme}://#{uri.host}/"
-      end
-
-      private def absolutify(url)
-        if url =~ /^\w*\:/i
+      private def absolutify(url : String)
+        if url.starts_with?("//")
+          [config.uri.scheme, url].join(":")
+        elsif url =~ /^\w*\:/i
           url
         else
-          [base_url, url].join("")
+          [config.base_url, url].join("")
         end
       rescue
         nil

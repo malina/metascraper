@@ -13,9 +13,9 @@ module Metascraper
       end
 
       def description
-        meta_description = document.xpath_node("//meta[@name='description']")
-        if meta_description
-          meta_description.attributes["content"].text
+        meta_descriptions = document.xpath_nodes("//meta[@name='description']")
+        unless meta_descriptions.empty?
+          meta_descriptions.first.attributes["content"].text
         else
           secondary_description
         end

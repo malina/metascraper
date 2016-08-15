@@ -11,7 +11,7 @@ module Metascraper
       @response = HTTP::Client.get(url)
       @document = XML.parse_html(@response.body)
       @texts = Parsers::Text.new(@document)
-      @images = Parsers::Images.new(@document, @url)
+      @images = Parsers::Images.new(@document)
     end
   end
 end
