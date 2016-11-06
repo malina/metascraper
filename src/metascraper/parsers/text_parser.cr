@@ -28,12 +28,12 @@ module Metascraper
       end
 
       private def document_title
-        title = document.xpath_node("//title")
+        title = document.xpath_node("//title").as(XML::Node)
         title.inner_text
       end
 
       private def og_title
-        title = document.xpath_node("//meta[@property='og:title']")
+        title = document.xpath_node("//meta[@property='og:title']").as(XML::Node)
         title.attributes["content"].text
       end
     end

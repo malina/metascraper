@@ -4,7 +4,7 @@ module Metascraper
     getter url
     getter parser
     delegate title, description, to: @parser
-    delegate images, base_url, to: @parser
+    delegate images, videos, to: @parser
 
     def initialize(url : String)
       @url = url
@@ -16,7 +16,8 @@ module Metascraper
         "url"           => url,
         "title"         => title,
         "description"   => description,
-        "images" => images
+        "images" => images,
+        "videos" => videos
       }
     end
   end
