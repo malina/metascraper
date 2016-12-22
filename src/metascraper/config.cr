@@ -3,15 +3,16 @@ module Metascraper
     INSTANCE = Config.new
     DEFAULT_CHARSET = "utf-8"
 
-    property min_width, base_url, url, uri, charset, skip_video
+    property image_min_width, base_url, url, uri, charset, skip_video, all_image
 
     def initialize
-      @min_width = 500
+      @image_min_width = 500.as(Bool | Int32)
       @url = ""
       @base_url = ""
       @uri = URI.new
       @charset = DEFAULT_CHARSET
-      @skip_video = false
+      @skip_video = false.as(Bool | Int32)
+      @all_image = false.as(Bool | Int32)
     end
   end
 

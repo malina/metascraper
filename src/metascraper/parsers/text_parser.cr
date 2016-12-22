@@ -23,18 +23,22 @@ module Metascraper
       end
 
       def secondary_description
-        first_long_paragraph = document.xpath_node("//p[string-length() >= 100]")
+        first_long_paragraph = document.xpath_node("//p[string-length() >= 100] | //div[string-length() >= 100]")
         first_long_paragraph ? first_long_paragraph.text : ""
       end
 
       private def document_title
         title = document.xpath_node("//title").as(XML::Node)
         title.inner_text
+      rescue
+        nil
       end
 
       private def og_title
         title = document.xpath_node("//meta[@property='og:title']").as(XML::Node)
         title.attributes["content"].text
+      rescue
+        nil
       end
     end
   end

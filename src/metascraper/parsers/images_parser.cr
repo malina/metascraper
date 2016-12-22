@@ -24,8 +24,12 @@ module Metascraper
       end
 
       private def parsed_images
-        config = Metascraper.config
-        document.xpath_nodes("//img[@width >= #{config.min_width} or substring-before(@width, 'px') > #{config.min_width}]/@src").map do |img|
+        path = if config.all_image
+                 "//img/@src"
+               else
+                 "//img[@width >= #{config.image_min_width} or substring-before(@width, 'px') > #{config.image_min_width}]/@src"
+               end
+        document.xpath_nodes(path).map do |img|
           source = img.text.as(String)
           absolutify(source)
         end

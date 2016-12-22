@@ -1,6 +1,8 @@
 # metascraper
 
-TODO: Write a description here
+Metascraper is a little lib for web scraping purposes.
+
+You give it an URL, and it lets you easily get its title, images, description, videos.
 
 ## Installation
 
@@ -22,15 +24,32 @@ require "metascraper"
 ```
 
 
-TODO: Write usage instructions here
+Initialize a Metascraper instance for an URL, like this:
 
-## Development
+```crystal
+page = Metascraper.new("https://github.com/malina/metascraper")
 
-TODO: Write development instructions here
+puts page.title
+```
+
+## Accessing scraped data
+
+```crystal
+page.url                 # URL of the page
+page.images              # enumerable collection, with every img found on the page
+page.title               # title of the page from the head section, as string
+page.description         # returns the meta description, or the first long paragraph if no meta description is found
+page.videos              # enumerable collection, with every youtube video found on the page
+```
+
+You can also access most of the scraped data as a hash:
+```crystal
+  page.to_hash
+```
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/metascraper/fork )
+1. Fork it ( https://github.com/malina/metascraper/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
@@ -38,4 +57,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) Alexandr Shumov - creator, maintainer
+- [malina](https://github.com/malina) Alexandr Shumov - creator, maintainer

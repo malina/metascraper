@@ -26,7 +26,7 @@ module Metascraper
     end
 
     private def encode_body : String
-      charset = @response.charset.as(String)
+      charset = @response.charset.as(String) rescue Metascraper::Config::DEFAULT_CHARSET
 
       if charset == config.charset
         @response.body

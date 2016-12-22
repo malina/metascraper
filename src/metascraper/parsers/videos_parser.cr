@@ -14,7 +14,7 @@ module Metascraper
 
       def videos
         youtube_urls.map do |url|
-          page = Metascraper.new(url, { min_width: config.min_width, skip_video: true }).as(Document)
+          page = Metascraper.new(url, {skip_video: true }).as(Document)
           Metascraper::Presenters::Video.new(url, page)
         end
       end
