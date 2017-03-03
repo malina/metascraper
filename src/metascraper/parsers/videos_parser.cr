@@ -16,7 +16,7 @@ module Metascraper
         youtube_urls.map do |url|
           page = Metascraper.new(url, {skip_video: true }).as(Document)
           Metascraper::Presenters::Video.new(url, page)
-        end
+        end.as(Array(Metascraper::Presenters::Video))
       end
 
       def youtube_urls : Array(String)

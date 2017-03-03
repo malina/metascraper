@@ -1,6 +1,7 @@
 module Metascraper
   struct Videos
     def videos
+      [] of Metascraper::Presenters::Video
     end
   end
 
@@ -15,7 +16,7 @@ module Metascraper
 
     def initialize(url : String)
       @url = url
-      @response = HTTP::Client.get(url)
+      @response = get_request(url).as(HTTP::Client::Response)
 
       response_body = encode_body
 
@@ -23,6 +24,15 @@ module Metascraper
       @texts = Parsers::Text.new(@document)
       @images = Parsers::Images.new(@document, config)
       @videos = config.skip_video ? Videos.new : Parsers::Videos.new(@document, config)
+    end
+
+    def get_request(url) : HTTP::Client::Response
+      response = HTTP::Client.get(url)
+      if (300..399).includes?(response.status_code)
+        url = response.headers["Location"]
+        response = get_request(url)
+      end
+      response
     end
 
     private def encode_body : String
