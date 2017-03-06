@@ -18,10 +18,11 @@ module Metascraper
       @url = url
       @response = get_request(url).as(HTTP::Client::Response)
 
-      response_body = encode_body
+      response_body = @response.body
 
       @document = XML.parse_html(response_body)
-      @texts = Parsers::Text.new(@document)
+      get_charset()
+      @texts = Parsers::Text.new(@document, config)
       @images = Parsers::Images.new(@document, config)
       @videos = config.skip_video ? Videos.new : Parsers::Videos.new(@document, config)
     end
@@ -35,18 +36,28 @@ module Metascraper
       response
     end
 
-    private def encode_body : String
-      charset = @response.charset.as(String) rescue Metascraper::Config::DEFAULT_CHARSET
+    private def get_charset : Void
+      from_response_charset = @response.charset.as(String)
 
-      if charset == config.charset
-        @response.body
+      unless charset_from_html.empty?
+        config.charset = charset_from_html
       else
-        config.charset = charset
-        Utils.new(
-          @response.body,
-          charset
-        ).encodeToUtf8.as(String)
+        config.charset = from_response_charset
       end
+    end
+
+    private def charset_from_html : String
+      meta = @document.xpath_node("//meta[contains(@content, 'charset')]/@content")
+      if meta
+        value = meta.content
+        substring = "charset="
+        index = value.index(substring).as(Int32)
+        value[(index+substring.size)..(value.size-1)]
+      else
+        ""
+      end
+    rescue
+      ""
     end
   end
 end

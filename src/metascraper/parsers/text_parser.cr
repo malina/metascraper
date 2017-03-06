@@ -1,23 +1,24 @@
 module Metascraper
   module Parsers
     class Text
-      getter document
-      def initialize(@document : XML::Node)
+      getter document, config
+      def initialize(@document : XML::Node, @config : Config)
       end
 
       def title
-        document_title || og_title
+        encode(document_title || og_title)
       rescue
         nil
       end
 
       def description
         meta_descriptions = document.xpath_nodes("//meta[@name='description']")
-        unless meta_descriptions.empty?
-          meta_descriptions.first.attributes["content"].text.strip.chomp
-        else
-          secondary_description
-        end
+        description = unless meta_descriptions.empty?
+                        meta_descriptions.first.attributes["content"].text.strip.chomp
+                      else
+                        secondary_description
+                      end
+        encode(description)
       rescue
         nil
       end
@@ -39,6 +40,11 @@ module Metascraper
         title.attributes["content"].text.strip.chomp
       rescue
         nil
+      end
+
+      def encode(text : String | Nil) : String | Nil
+        return unless text
+        Utils.new(text, config.charset).encodeToUtf8.as(String)
       end
     end
   end
