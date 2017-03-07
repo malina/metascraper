@@ -44,6 +44,8 @@ module Metascraper
       else
         config.charset = from_response_charset
       end
+    rescue
+      nil
     end
 
     private def charset_from_html : String
