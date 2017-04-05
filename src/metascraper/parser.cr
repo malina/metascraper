@@ -37,7 +37,7 @@ module Metascraper
     end
 
     private def get_charset : Void
-      from_response_charset = @response.charset.as(String)
+      from_response_charset = (@response.charset || "utf-8").as(String)
 
       unless charset_from_html.empty?
         config.charset = charset_from_html
