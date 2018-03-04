@@ -3,7 +3,7 @@ module Metascraper
     METHODS = %i(title)
     getter url
     getter parser
-    delegate title, description, to: @parser
+    delegate title, description, content,  to: @parser
     delegate images, videos, to: @parser
 
     def initialize(url : String)
@@ -16,8 +16,7 @@ module Metascraper
         "url"           => url,
         "title"         => title,
         "description"   => description,
-        "images" => images,
-        "videos" => videos
+        "images" => images
       }
     end
 
@@ -32,27 +31,6 @@ module Metascraper
               images.map do |image|
                 json.object do
                   json.field "url", image
-                end
-              end
-            end
-          end
-          json.field "videos" do
-            json.array do
-              videos.map do |video|
-                json.object do
-                  json.field "url", video.source.url
-                  json.field "title", video.source.title
-                  json.field "description", video.source.description
-                  json.field "html", video.html
-                  json.field "images" do
-                    json.array do
-                      video.source.images.map do |image|
-                        json.object do
-                          json.field "url", image
-                        end
-                      end
-                    end
-                  end
                 end
               end
             end

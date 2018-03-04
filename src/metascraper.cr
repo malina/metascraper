@@ -1,9 +1,13 @@
 require "./metascraper/*"
 require "./metascraper/presenters/*"
+require "./metascraper/parsers/content/*"
 require "./metascraper/parsers/*"
 require "uri"
 require "xml"
 require "http/client"
+alias Candidate = NamedTuple(content_score: Float64, elem: XML::Node)
+
+require "benchmark"
 
 module Metascraper
   def self.new(url : String, options = {} of Symbol => Int32 | Bool)

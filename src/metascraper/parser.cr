@@ -11,8 +11,8 @@ module Metascraper
     @config = Metascraper.config
 
     delegate title, description, to: @texts
+    delegate content, to: @content
     delegate images, to: @images
-    delegate videos, to: @videos
 
     def initialize(url : String)
       @url = url
@@ -22,9 +22,10 @@ module Metascraper
 
       @document = XML.parse_html(response_body)
       get_charset()
+
       @texts = Parsers::Text.new(@document, config)
       @images = Parsers::Images.new(@document, config)
-      @videos = config.skip_video ? Videos.new : Parsers::Videos.new(@document, config)
+      @content = Parsers::ContentParser.new(@document, config)
     end
 
     def get_request(url) : HTTP::Client::Response

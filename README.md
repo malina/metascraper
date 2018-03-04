@@ -39,7 +39,7 @@ page.url                 # URL of the page
 page.images              # enumerable collection, with every img found on the page
 page.title               # title of the page from the head section, as string
 page.description         # returns the meta description, or the first long paragraph if no meta description is found
-page.videos              # enumerable collection, with every youtube video found on the page
+page.content             # primary readability page content
 ```
 
 You can also access most of the scraped data as a hash:

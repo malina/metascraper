@@ -99,4 +99,27 @@ describe Metascraper do
 
     page.to_hash["images"].should eq([image_url, image_url_with_width])
   end
+
+  it "get readability content" do
+    description = "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>"
+    url = "https://example.com"
+    WebMock.stub(:get, url).to_return(body: %(
+      <html>
+        <body>
+          <main class="main">
+            <p>Text</p>
+            <article>
+              #{description}
+            </article>
+          </main>
+        </body>
+      </html>
+    ))
+
+    page = Metascraper.new(url)
+
+    puts page.content
+
+    page.content.should eq(description)
+  end
 end
