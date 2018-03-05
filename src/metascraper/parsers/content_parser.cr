@@ -51,9 +51,9 @@ module Metascraper
 
       def get_article(candidates : Array(Candidate), best_candidate : Candidate) : XML::Node
         sibling_score_threshold = [10, best_candidate[:content_score] * 0.2].max
+
         output = XML.parse("<?xml version='1.0' encoding='#{config.charset}'?><div>оллл</div>").as(XML::Node)
 
-        result = [] of XML::Node
         node = best_candidate[:elem].parent.as(XML::Node)
         node.children.each do |sibling|
           append = false
@@ -80,6 +80,7 @@ module Metascraper
             sibling_dup.name = "div" unless %w[div p].includes?(sibling.name.downcase)
             output.add sibling_dup
           end
+        end
         output
       end
     end
