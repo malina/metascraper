@@ -33,7 +33,7 @@ module Metascraper
         def transform_misused_divs_into_paragraphs!
           document.xpath_nodes("//*").each do |elem|
             if elem.name.downcase == "div"
-              if elem.to_s.match(REGEXES[:div_to_p])
+              if !elem.to_s.match(REGEXES[:div_to_p])
                 elem.name = "p"
               end
             end

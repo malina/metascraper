@@ -38,12 +38,12 @@ module Metascraper
           end
 
           save_opts = XML::SaveOptions::NO_DECL | XML::SaveOptions::NO_EMPTY | XML::SaveOptions::AS_HTML
-          html = node.to_xml #(options: save_opts)
+          html = node.to_xml(options: save_opts)
           return encode(html.gsub(/[\r\n\f]+/, "\n" ), charset)
         end
 
         def clean_conditionally(node : XML::Node, candidates : Array(Candidate), selector : String)
-          #return unless @clean_conditionally
+          return unless @clean_conditionally
           node.xpath_nodes(selector).each do |el|
             weight = Scoring.class_weight(el)
             candidate = candidates.find { |c| c[:elem] == el }
