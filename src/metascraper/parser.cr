@@ -29,7 +29,8 @@ module Metascraper
     end
 
     def get_request(url) : HTTP::Client::Response
-      response = HTTP::Client.get(url)
+      context = url.includes?("https://") ? OpenSSL::SSL::Context::Client.insecure : nil
+      response = HTTP::Client.get(url, tls: context)
       if (300..399).includes?(response.status_code)
         url = response.headers["Location"]
         response = get_request(url)
